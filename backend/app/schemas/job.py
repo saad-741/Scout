@@ -13,8 +13,9 @@ class DatePostedFilter(str, Enum):
 
 
 class JobSearchRequest(BaseModel):
-    role: str = Field(..., example="Backend Developer")
-    location: str = Field(..., example="Lahore")
+    # Allow empty/default strings to prevent 422 errors on empty initial searches
+    role: Optional[str] = Field(default="", example="Backend Developer")
+    location: Optional[str] = Field(default="", example="Lahore")
     work_types: Optional[List[WorkType]] = Field(default=None, example=[WorkType.REMOTE, WorkType.HYBRID])
     experience_levels: Optional[List[ExperienceLevel]] = Field(default=None, example=[ExperienceLevel.ENTRY_LEVEL])
     skills: Optional[List[str]] = Field(default=None, example=["Python", "Django", "PostgreSQL", "REST API"])
@@ -23,7 +24,6 @@ class JobSearchRequest(BaseModel):
         default=False, 
         description="If True, skips DB cache check and fetches fresh jobs from provider."
     )
-
 
 # --- 1. Raw Ingestion Model (What external sources give us) ---
 class RawJobListing(BaseModel):

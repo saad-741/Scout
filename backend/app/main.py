@@ -13,6 +13,19 @@ app = FastAPI(
     version="1.0.0",
 )
 
+from fastapi import Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    print("Validation Error Payload:", exc.errors())
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors()},
+    )
+
 
 @app.get("/", summary="Root Health Check")
 async def root():
@@ -94,12 +107,10 @@ async def get_job_details(
     """
     service = JobService(db=db)
     job = service.get_job_details(job_id)
-    
+
     if not job:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Job with ID '{job_id}' was not found.",
         )
-    return job 
-
-   
+    return job

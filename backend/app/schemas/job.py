@@ -1,7 +1,28 @@
 from datetime import datetime
 from typing import List, Optional
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 from app.enums import EmploymentType, ExperienceLevel, SalaryPeriod, WorkType
+from enum import Enum
+
+
+class DatePostedFilter(str, Enum):
+    PAST_24H = "24h"
+    PAST_WEEK = "week"
+    PAST_MONTH = "month"
+    ANY_TIME = "any"
+
+
+class JobSearchRequest(BaseModel):
+    role: str = Field(..., example="Backend Developer")
+    location: str = Field(..., example="Lahore")
+    work_types: Optional[List[WorkType]] = Field(default=None, example=[WorkType.REMOTE, WorkType.HYBRID])
+    experience_levels: Optional[List[ExperienceLevel]] = Field(default=None, example=[ExperienceLevel.ENTRY_LEVEL])
+    skills: Optional[List[str]] = Field(default=None, example=["Python", "Django", "PostgreSQL", "REST API"])
+    date_posted: Optional[DatePostedFilter] = Field(default=DatePostedFilter.ANY_TIME)
+    force_refresh: bool = Field(
+        default=False, 
+        description="If True, skips DB cache check and fetches fresh jobs from provider."
+    )
 
 
 # --- 1. Raw Ingestion Model (What external sources give us) ---
@@ -91,11 +112,7 @@ class JobBase(BaseModel):
     source_url: str
     posted_at: datetime
 
-
-class JobCreate(JobBase):
-    pass
-
-
+ 
 class JobResponse(JobBase):
     id: str
     created_at: datetime

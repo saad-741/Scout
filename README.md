@@ -1,4 +1,4 @@
-# 🎯 Scout — AI-Powered Job Search & Intelligence App
+# 🎯 Scout — AI-Powered Job Search & Intelligence Mobile App
 
 **Scout** is a full-stack AI-powered mobile job-search application that transforms messy job listings into clean, structured, and easy-to-understand information.
 

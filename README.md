@@ -26,7 +26,7 @@ Scout lets users search and filter jobs by **role, location, work type, experien
                     ┌─────────────────┐
                     │  Flutter Mobile │
                     └────────┬────────┘
-                             │ HTTP / REST
+                             │ HTTP / REST API
                              ▼
                     ┌─────────────────┐
                     │     FastAPI     │
